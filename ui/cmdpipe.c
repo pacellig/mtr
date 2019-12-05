@@ -235,8 +235,8 @@ void execute_packet_child(
      */
     execlp(mtr_packet_path, "mtr-packet", (char *) NULL);
 
-    /* 
-       Then try to find it where WE were executed from.  
+    /*
+       Then try to find it where WE were executed from.
      */
     strncpy (buf, myname, 240);
     strcat (buf, "-packet");
@@ -687,7 +687,6 @@ void handle_command_reply(
            unknown type, it should still parse.
          */
         display_close(ctl);
-        printf("reply is %s\n", reply_str);
         error(EXIT_FAILURE, errno, "reply parse failure");
         return;
     }
