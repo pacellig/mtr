@@ -579,10 +579,10 @@ static void parse_arg(
             break;
         case 'E':
             printf("mtr.c case 'E'");
-            // if (ctl->mtrtype != IPPROTO_ICMP) {
-            //     error(EXIT_FAILURE, 0,
-            //           "-u , -T, -S and -E are mutually exclusive");
-            // }
+            if (ctl->mtrtype != IPPROTO_ICMP) {
+                error(EXIT_FAILURE, 0,
+                      "-u , -T, -S and -E are mutually exclusive");
+            }
             ctl->mtrtype = IPPROTO_ESP;
             printf("ctl->mtrtype: %d\n", ctl->mtrtype);
             break;
@@ -653,6 +653,8 @@ static void parse_arg(
             usage(stderr);
         }
     }
+
+    printf("Out of getopt, starting display mode..");
 
     if (ctl->DisplayMode == DisplayReport ||
         ctl->DisplayMode == DisplayTXT ||
