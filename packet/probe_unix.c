@@ -507,6 +507,10 @@ bool is_protocol_supported(
     if (protocol == IPPROTO_TCP) {
         return true;
     }
+
+    if (protocol == IPPROTO_ESP) {
+        return true;
+    }
 #ifdef IPPROTO_SCTP
     if (protocol == IPPROTO_SCTP) {
         return net_state->platform.sctp_support;
