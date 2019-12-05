@@ -201,6 +201,8 @@ bool decode_probe_argument(
             param->protocol = IPPROTO_UDP;
         } else if (!strcmp(value, "tcp")) {
             param->protocol = IPPROTO_TCP;
+        } else if (!strcmp(value, "esp")) {
+            param->protocol = IPPROTO_ESP;
 #ifdef IPPROTO_SCTP
         } else if (!strcmp(value, "sctp")) {
             param->protocol = IPPROTO_SCTP;
