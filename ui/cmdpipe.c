@@ -125,10 +125,10 @@ int check_feature(
     snprintf(check_command, COMMAND_BUFFER_SIZE,
              "1 check-support feature %s\n", feature);
 
-    if (send_synchronous_command(ctl, cmdpipe, check_command, &reply, reply_buf) ==
-        -1) {
-        return -1;
-    }
+    // if (send_synchronous_command(ctl, cmdpipe, check_command, &reply, reply_buf) ==
+    //     -1) {
+    //     return -1;
+    // }
 
     /*  Check that the feature is supported  */
     if (!strcmp(reply.command_name, "feature-support")
@@ -189,7 +189,7 @@ int check_packet_features(
         }
     } else if (ctl->mtrtype == IPPROTO_ESP) {
         if (check_feature(ctl, cmdpipe, "esp")) {
-            printf("esp failure");
+            printf("esp failure\n");
             return -1;
         }
 #ifdef HAS_SCTP
