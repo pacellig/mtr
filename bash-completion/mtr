@@ -51,7 +51,7 @@ _mtr_module()
   case $cur in
     -*)
       OPTS='
-        --filename --inet --inet6 --udp --tcp --address --first-ttl
+        --filename --inet --inet6 --udp --tcp --esp --address --first-ttl
         --max-ttl --max-unknown --port --localport --psize --bitpattern
         --interval --gracetime --tos --mpls --timeout --mark --report
         --report-wide --report-cycles --json --xml --csv --raw --split

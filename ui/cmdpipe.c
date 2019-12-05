@@ -182,6 +182,10 @@ int check_packet_features(
         if (check_feature(ctl, cmdpipe, "tcp")) {
             return -1;
         }
+    } else if (ctl->mtrtype == IPPROTO_ESP) {
+        if (check_feature(ctl, cmdpipe, "esp")) {
+            return -1;
+        }
 #ifdef HAS_SCTP
     } else if (ctl->mtrtype == IPPROTO_SCTP) {
         if (check_feature(ctl, cmdpipe, "sctp")) {

@@ -112,6 +112,8 @@ static void __attribute__ ((__noreturn__)) usage(FILE * out)
           out);
     fputs(" -T, --tcp                  use TCP instead of ICMP echo\n",
           out);
+    fputs(" -E, --esp                  use ESP instead of ICMP echo\n",
+          out);
     fputs(" -I, --interface NAME       use named network interface\n",
          out);
     fputs
@@ -373,6 +375,7 @@ static void parse_arg(
         {"first-ttl", 1, NULL, 'f'},    /* -f & -m are borrowed from traceroute */
         {"max-ttl", 1, NULL, 'm'},
         {"max-unknown", 1, NULL, 'U'},
+        {"esp", 0, NULL, 'E'},  /* ESP (default is ICMP) */
         {"udp", 0, NULL, 'u'},  /* UDP (default is ICMP) */
         {"tcp", 0, NULL, 'T'},  /* TCP (default is ICMP) */
 #ifdef HAS_SCTP
@@ -573,6 +576,14 @@ static void parse_arg(
                 ctl->remoteport = 80;
             }
             ctl->mtrtype = IPPROTO_TCP;
+            break;
+        case 'E':
+            if (ctl->mtrtype != IPPROTO_ICMP) {
+                error(EXIT_FAILURE, 0,
+                      "-u , -T, -S and -E are mutually exclusive");
+            }
+            ctl->mtrtype = IPPROTO_ESP;
+            printf("ctl->mtrtype: %d\n", ctl->mtrtype);
             break;
 #ifdef HAS_SCTP
         case 'S':
