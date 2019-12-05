@@ -121,6 +121,10 @@ const char *check_support(
     if (!strcmp(feature, "tcp")) {
         return check_protocol_support(net_state, IPPROTO_TCP);
     }
+
+    if (!strcmp(feature, "esp")) {
+        return check_protocol_support(net_state, IPPROTO_ESP);
+    }
 #ifdef IPPROTO_SCTP
     if (!strcmp(feature, "sctp")) {
         return check_protocol_support(net_state, IPPROTO_SCTP);
