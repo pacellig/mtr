@@ -336,6 +336,9 @@ int mtr_curses_keyaction(
         case IPPROTO_TCP:
             ctl->mtrtype = IPPROTO_ICMP;
             break;
+        case IPPROTO_ESP:
+            ctl->mtrtype = IPPROTO_ESP;
+            break;
         }
         return ActionNone;
         /* reserve to display help message -Min */

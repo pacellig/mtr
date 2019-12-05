@@ -545,6 +545,7 @@ int construct_ip4_packet(
     int packet_size,
     const struct probe_param_t *param)
 {
+    printf("Construct ip4 packet");
     int send_socket = net_state->platform.ip4_send_socket;
     bool is_stream_protocol = false;
     int tos, ttl, socket;
