@@ -578,13 +578,11 @@ static void parse_arg(
             ctl->mtrtype = IPPROTO_TCP;
             break;
         case 'E':
-            printf("mtr.c case 'E'");
             if (ctl->mtrtype != IPPROTO_ICMP) {
                 error(EXIT_FAILURE, 0,
                       "-u , -T, -S and -E are mutually exclusive");
             }
             ctl->mtrtype = IPPROTO_ESP;
-            printf("ctl->mtrtype: %d\n", ctl->mtrtype);
             break;
 #ifdef HAS_SCTP
         case 'S':
@@ -653,8 +651,6 @@ static void parse_arg(
             usage(stderr);
         }
     }
-
-    printf("Out of getopt, starting display mode..\n");
 
     if (ctl->DisplayMode == DisplayReport ||
         ctl->DisplayMode == DisplayTXT ||
