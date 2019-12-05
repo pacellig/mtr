@@ -84,6 +84,8 @@ int send_synchronous_command(
     printf("send synchronous command: %s", cmd);
     command_length = strlen(cmd);
     write_length = write(cmdpipe->write_fd, cmd, command_length);
+    
+    printf("ssc: wl: %d", write_length);
 
     if (write_length == -1) {
         return -1;
@@ -97,6 +99,8 @@ int send_synchronous_command(
     /*  Read the reply to our query  */
     read_length =
         read(cmdpipe->read_fd, reply, PACKET_REPLY_BUFFER_SIZE - 1);
+
+    printf("ssc: reply: %s", reply);
 
     if (read_length < 0) {
         return -1;
