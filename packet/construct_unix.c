@@ -481,7 +481,7 @@ int compute_packet_size(
 {
     int packet_size = 0;
 
-    if (param->protocol == IPPROTO_TCP) {
+    if (param->protocol == IPPROTO_TCP||param->protocol == IPPROTO_ESP) {
         return 0;
     }
 #ifdef IPPROTO_SCTP
@@ -591,7 +591,7 @@ int construct_ip4_packet(
     /*
        The routing mark requires CAP_NET_ADMIN, as opposed to the
        CAP_NET_RAW which we are sometimes explicitly given.
-       If we don't have CAP_NET_ADMIN, this will fail, so we'll 
+       If we don't have CAP_NET_ADMIN, this will fail, so we'll
        only set the mark if the user has explicitly requested it.
 
        Unfortunately, this means that once the mark is set, it won't
