@@ -511,7 +511,6 @@ bool is_protocol_supported(
     }
 
     if (protocol == IPPROTO_ESP) {
-        printf("ESP is supported. Yuppi yuppi yeah.");
         return true;
     }
 #ifdef IPPROTO_SCTP
