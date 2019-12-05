@@ -90,6 +90,12 @@ struct UDPHeader {
     uint16_t checksum;
 };
 
+/* Structure of an UDP header.  */
+struct ESPHeader {
+    uint32_t spi;
+    uint32_t seq;
+};
+
 /* Structure of an TCP header, as far as we need it.  */
 struct TCPHeader {
     uint16_t srcport;

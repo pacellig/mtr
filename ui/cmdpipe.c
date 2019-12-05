@@ -687,7 +687,6 @@ void handle_command_reply(
            unknown type, it should still parse.
          */
         display_close(ctl);
-        printf("reply is %s\n", reply_str);
         error(EXIT_FAILURE, errno, "reply parse failure");
         return;
     }

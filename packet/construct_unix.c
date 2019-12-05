@@ -481,7 +481,7 @@ int compute_packet_size(
 {
     int packet_size = 0;
 
-    if (param->protocol == IPPROTO_TCP||param->protocol == IPPROTO_ESP) {
+    if (param->protocol == IPPROTO_TCP) {
         return 0;
     }
 #ifdef IPPROTO_SCTP
@@ -511,6 +511,9 @@ int compute_packet_size(
 
         /*  We may need to put the sequence number in the payload  */
         packet_size += sizeof(int);
+    } else if (param->protocol == IPPROTO_ESP) {
+        packet_size += sizeof(struct ESPHeader);
+
     } else {
         errno = EINVAL;
         return -1;
@@ -570,6 +573,7 @@ int construct_ip4_packet(
             construct_udp4_header(net_state, probe, packet_buffer,
                                   packet_size, param);
         } else {
+            // ¯\_(ツ)_/¯
             // errno = EINVAL;
             // return -1;
         }
