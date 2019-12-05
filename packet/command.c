@@ -349,7 +349,7 @@ void send_probe_command(
     if (!validate_probe_parameters(net_state, &param)) {
         return;
     }
-    fprintf(stderr, "Sending probe...\n");
+    
     /*  Send the probe using a platform specific mechanism  */
     send_probe(net_state, &param);
 }
