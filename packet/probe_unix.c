@@ -55,6 +55,8 @@ int send_packet(
     int send_socket = 0;
     int sockaddr_length;
 
+    printf("send packet");
+
     if (sockaddr->ss_family == AF_INET6) {
         sockaddr_length = sizeof(struct sockaddr_in6);
 
@@ -509,6 +511,7 @@ bool is_protocol_supported(
     }
 
     if (protocol == IPPROTO_ESP) {
+        printf("ESP is supported. Yuppi yuppi yeah.");
         return true;
     }
 #ifdef IPPROTO_SCTP
@@ -553,6 +556,8 @@ void send_probe(
     struct probe_t *probe;
     int trytimes;
     int packet_size;
+
+    printf("Send probe");
 
     probe = alloc_probe(net_state, param->command_token);
     if (probe == NULL) {
