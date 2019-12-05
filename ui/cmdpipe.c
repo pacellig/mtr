@@ -158,10 +158,12 @@ int check_packet_features(
     /*  Check the IP protocol version  */
     if (ctl->af == AF_INET6) {
         if (check_feature(ctl, cmdpipe, "ip-6")) {
+            printf("ip-6 failure");
             return -1;
         }
     } else if (ctl->af == AF_INET) {
         if (check_feature(ctl, cmdpipe, "ip-4")) {
+            printf("ip-4 failure");
             return -1;
         }
     } else {
@@ -172,23 +174,28 @@ int check_packet_features(
     /*  Check the transport protocol  */
     if (ctl->mtrtype == IPPROTO_ICMP) {
         if (check_feature(ctl, cmdpipe, "icmp")) {
+            printf("icmp failure");
             return -1;
         }
     } else if (ctl->mtrtype == IPPROTO_UDP) {
         if (check_feature(ctl, cmdpipe, "udp")) {
+            printf("udp failure");
             return -1;
         }
     } else if (ctl->mtrtype == IPPROTO_TCP) {
         if (check_feature(ctl, cmdpipe, "tcp")) {
+            printf("tcp failure");
             return -1;
         }
     } else if (ctl->mtrtype == IPPROTO_ESP) {
         if (check_feature(ctl, cmdpipe, "esp")) {
+            printf("esp failure");
             return -1;
         }
 #ifdef HAS_SCTP
     } else if (ctl->mtrtype == IPPROTO_SCTP) {
         if (check_feature(ctl, cmdpipe, "sctp")) {
+            printf("sctp failure");
             return -1;
         }
 #endif
@@ -200,6 +207,7 @@ int check_packet_features(
 #ifdef SO_MARK
     if (ctl->mark) {
         if (check_feature(ctl, cmdpipe, "mark")) {
+            printf("mark failure");
             return -1;
         }
     }
