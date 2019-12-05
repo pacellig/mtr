@@ -161,7 +161,6 @@ void handle_inner_ip4_packet(
     int mpls_count,
     struct mpls_label_t *mpls)
 {
-    printf("Handling inner ip4 packet");
     const int ip_icmp_size =
         sizeof(struct IPHeader) + sizeof(struct ICMPHeader);
     const int ip_udp_size =
@@ -238,7 +237,6 @@ void handle_inner_ip6_packet(
     int mpls_count,
     struct mpls_label_t *mpls)
 {
-    printf("Handle inner ip6 packet");
     const int ip_icmp_size =
         sizeof(struct IP6Header) + sizeof(struct ICMPHeader);
     const int ip_udp_size =
