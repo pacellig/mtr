@@ -84,8 +84,6 @@ int send_synchronous_command(
     printf("send synchronous command: %s", cmd);
     command_length = strlen(cmd);
     write_length = write(cmdpipe->write_fd, cmd, command_length);
-    
-    printf("ssc: wl: %d", write_length);
 
     if (write_length == -1) {
         return -1;
@@ -99,8 +97,6 @@ int send_synchronous_command(
     /*  Read the reply to our query  */
     read_length =
         read(cmdpipe->read_fd, reply, PACKET_REPLY_BUFFER_SIZE - 1);
-
-    printf("ssc: reply: %s", reply);
 
     if (read_length < 0) {
         return -1;
@@ -692,6 +688,7 @@ void handle_command_reply(
            unknown type, it should still parse.
          */
         display_close(ctl);
+        printf("reply is %s\n", reply_str);
         error(EXIT_FAILURE, errno, "reply parse failure");
         return;
     }
@@ -766,7 +763,7 @@ void consume_reply_buffer(
         /*
            Terminate the reply string at the newline, which
            is necessary in the case where we are able to read
-           mulitple replies arriving simultaneously.
+           multiple replies arriving simultaneously.
          */
         *end_of_reply = 0;
 

@@ -545,7 +545,6 @@ int construct_ip4_packet(
     int packet_size,
     const struct probe_param_t *param)
 {
-    printf("Construct ip4 packet");
     int send_socket = net_state->platform.ip4_send_socket;
     bool is_stream_protocol = false;
     int tos, ttl, socket;
@@ -571,8 +570,8 @@ int construct_ip4_packet(
             construct_udp4_header(net_state, probe, packet_buffer,
                                   packet_size, param);
         } else {
-            errno = EINVAL;
-            return -1;
+            // errno = EINVAL;
+            // return -1;
         }
     }
 

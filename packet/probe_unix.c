@@ -55,8 +55,6 @@ int send_packet(
     int send_socket = 0;
     int sockaddr_length;
 
-    printf("send packet");
-
     if (sockaddr->ss_family == AF_INET6) {
         sockaddr_length = sizeof(struct sockaddr_in6);
 
@@ -555,8 +553,6 @@ void send_probe(
     struct probe_t *probe;
     int trytimes;
     int packet_size;
-
-    printf("Send probe");
 
     probe = alloc_probe(net_state, param->command_token);
     if (probe == NULL) {

@@ -80,8 +80,6 @@ int parse_command(
     int token_count;
     int i;
 
-    printf("Parse command ... %s", tokens);
-
     memset(command, 0, sizeof(struct command_t));
 
     /*  Tokenize the string using whitespace  */
