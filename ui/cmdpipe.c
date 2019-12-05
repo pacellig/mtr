@@ -635,7 +635,6 @@ void handle_reply_errors(
     }
 
     if (!strcmp(reply_name, "invalid-argument")) {
-        printf("%s\n",reply_name);
         display_close(ctl);
         error(EXIT_FAILURE, 0, "mtr-packet reported invalid argument");
     }
