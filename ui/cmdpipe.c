@@ -81,7 +81,7 @@ int send_synchronous_command(
     int read_length;
 
     /*  Query send-probe support  */
-    printf("%s", cmd);
+    printf("send synchronous command: %s", cmd);
     command_length = strlen(cmd);
     write_length = write(cmdpipe->write_fd, cmd, command_length);
 

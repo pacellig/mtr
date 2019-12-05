@@ -654,7 +654,7 @@ static void parse_arg(
         }
     }
 
-    printf("Out of getopt, starting display mode..");
+    printf("Out of getopt, starting display mode..\n");
 
     if (ctl->DisplayMode == DisplayReport ||
         ctl->DisplayMode == DisplayTXT ||
