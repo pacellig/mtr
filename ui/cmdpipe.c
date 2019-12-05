@@ -387,7 +387,7 @@ void construct_base_command(
         protocol = "udp";
     } else if (ctl->mtrtype == IPPROTO_TCP) {
         protocol = "tcp";
-    else if (ctl->mtrtype == IPPROTO_ESP) {
+    } else if (ctl->mtrtype == IPPROTO_ESP) {
         protocol = "esp";
 #ifdef HAS_SCTP
     } else if (ctl->mtrtype == IPPROTO_SCTP) {
