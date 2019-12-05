@@ -578,10 +578,11 @@ static void parse_arg(
             ctl->mtrtype = IPPROTO_TCP;
             break;
         case 'E':
-            if (ctl->mtrtype != IPPROTO_ICMP) {
-                error(EXIT_FAILURE, 0,
-                      "-u , -T, -S and -E are mutually exclusive");
-            }
+            printf("mtr.c case 'E'");
+            // if (ctl->mtrtype != IPPROTO_ICMP) {
+            //     error(EXIT_FAILURE, 0,
+            //           "-u , -T, -S and -E are mutually exclusive");
+            // }
             ctl->mtrtype = IPPROTO_ESP;
             printf("ctl->mtrtype: %d\n", ctl->mtrtype);
             break;
