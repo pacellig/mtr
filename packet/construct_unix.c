@@ -536,11 +536,8 @@ int compute_packet_size(
         /* Generic size (GenericHeader) */
         packet_size += sizeof(struct GenericHeader);
     } else {
-        /* 
-           Support all protocols, without building the actual underlying
-           packet
-        */
-        packet_size = 0;
+        errno = EINVAL;
+        return -1;
     }
 
     /*
@@ -754,7 +751,7 @@ int construct_ip6_packet(
     /*
        Check the current socket address, and if it is the same
        as the source address we intend, we will skip the bind.
-       This is to accomodate Solaris, which, as of Solaris 11.3,
+       This is to accommodate Solaris, which, as of Solaris 11.3,
        will return an EINVAL error on bind if the socket is already
        bound, even if the same address is used.
      */

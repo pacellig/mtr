@@ -80,6 +80,8 @@ int send_synchronous_command(
     int write_length;
     int read_length;
 
+
+    fprintf(stderr, "ssc: %s\n", cmd);
     /*  Query send-probe support  */
     command_length = strlen(cmd);
     write_length = write(cmdpipe->write_fd, cmd, command_length);
@@ -139,7 +141,7 @@ int check_feature(
         /*  Looks good  */
         return 0;
     }
-
+    fprintf(stderr, "check feature failed\n");
     errno = ENOTSUP;
     return -1;
 }
@@ -155,6 +157,7 @@ int check_packet_features(
     struct mtr_ctl *ctl,
     struct packet_command_pipe_t *cmdpipe)
 {
+    char proto_num[4];
     /*  Check the IP protocol version  */
     if (ctl->af == AF_INET6) {
         if (check_feature(ctl, cmdpipe, "ip-6")) {
@@ -182,15 +185,20 @@ int check_packet_features(
         if (check_feature(ctl, cmdpipe, "tcp")) {
             return -1;
         }
-    } else if (ctl->mtrtype > -1 && ctl->mtrtype < IPPROTO_MAX) {
-        return 0;
 #ifdef HAS_SCTP
     } else if (ctl->mtrtype == IPPROTO_SCTP) {
         if (check_feature(ctl, cmdpipe, "sctp")) {
             return -1;
         }
 #endif
-    } else if(ctl->mtrtype < 0 || ctl->mtrtype > IPPROTO_MAX) {
+    } else if(ctl->mtrtype >0 && ctl->mtrtype <= IPPROTO_MAX) {
+        sprintf(proto_num, "%d", ctl->mtrtype);
+        if (check_feature(ctl, cmdpipe, proto_num)) {
+            return -1;
+        }
+    } else {
+    fprintf(stderr, "check packet features failed\n");
+
         errno = EINVAL;
         return -1;
     }
@@ -682,6 +690,7 @@ void handle_command_reply(
     char *reply_name;
     struct mplslen mpls;
 
+    fprintf(stderr, "%s\n", reply_str);
     /*  Parse the reply string  */
     if (parse_command(&reply, reply_str)) {
         /*
