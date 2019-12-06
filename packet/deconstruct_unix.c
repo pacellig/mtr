@@ -222,7 +222,7 @@ void handle_inner_ip4_packet(
                                icmp_result, IPPROTO_SCTP, 0, sctp->srcport,
                                mpls_count, mpls);
 #endif
-    } else if (ip->protocol < IPPROTO_MAX) {
+    } else {
         if (packet_length < ip_generic_size) {
             return;
         }
