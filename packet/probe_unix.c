@@ -490,7 +490,7 @@ bool is_ip_version_supported(
     }
 }
 
-/*  Support all protocol numbers  */
+/*  Support any protocol numbers (unix only) */
 bool is_protocol_supported(
     struct net_state_t * net_state,
     int protocol)
@@ -704,7 +704,6 @@ void receive_replies_from_recv_socket(
         msg.msg_control = control;
         msg.msg_controllen = sizeof(control);
         packet_length = recvmsg(socket, &msg, flag);
-
         /*
            Get the time immediately after reading the packet to
            keep the timing as precise as we can.

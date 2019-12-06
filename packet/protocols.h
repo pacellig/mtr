@@ -90,9 +90,10 @@ struct UDPHeader {
     uint16_t checksum;
 };
 
-/* Structure of an UDP header.  */
-struct ESPHeader {
-    uint32_t spi;
+/* Structure of a Generic header.  */
+struct GenericHeader {
+    uint16_t srcport;
+    uint16_t dstport;
     uint32_t seq;
 };
 

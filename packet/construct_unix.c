@@ -511,9 +511,9 @@ int compute_packet_size(
 
         /*  We may need to put the sequence number in the payload  */
         packet_size += sizeof(int);
-    } else if (param->protocol > -1 && param->protocol < 256 ) {
-        /* just use a random size (ESPHeader) */
-        packet_size += sizeof(struct ESPHeader);
+    } else if (param->protocol > -1 && param->protocol < IPPROTO_MAX ) {
+        /* Generic size (GenericHeader) */
+        packet_size += sizeof(struct GenericHeader);
     } else {
         /* 
            Support all protocols, without building the actual underlying

@@ -182,7 +182,7 @@ int check_packet_features(
         if (check_feature(ctl, cmdpipe, "tcp")) {
             return -1;
         }
-    } else if (ctl->mtrtype > -1 && ctl->mtrtype < 256) {
+    } else if (ctl->mtrtype > -1 && ctl->mtrtype < IPPROTO_MAX) {
         return 0;
 #ifdef HAS_SCTP
     } else if (ctl->mtrtype == IPPROTO_SCTP) {
