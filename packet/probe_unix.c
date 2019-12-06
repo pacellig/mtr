@@ -497,7 +497,7 @@ bool is_protocol_supported(
     struct net_state_t * net_state,
     int protocol)
 {
-    return true
+    return true;
 }
 
 /*  Report an error during send_probe based on the errno value  */
