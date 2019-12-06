@@ -176,6 +176,9 @@ void handle_inner_ip4_packet(
         sizeof(struct IPHeader) + sizeof(struct SCTPHeader);
     const struct SCTPHeader *sctp;
 #endif
+    const int ip_esp_size =
+        sizeof(struct IPHeader) + sizeof(struct ESPHeader);
+    const struct ESPHeader *esp;
 
     if (ip->protocol == IPPROTO_ICMP) {
         if (packet_length < ip_icmp_size) {
@@ -219,6 +222,16 @@ void handle_inner_ip4_packet(
                                icmp_result, IPPROTO_SCTP, 0, sctp->srcport,
                                mpls_count, mpls);
 #endif
+    } else if (ip->protocol == IPPROTO_ESP) {
+        if (packet_length < ip_esp_size) {
+            return;
+        }
+
+        esp = (struct ESPHeader *) (ip + 1);
+fprintf(stderr,"received ESP seq: %d\n", esp->seq);
+        find_and_receive_probe(net_state, remote_addr, timestamp,
+                               icmp_result, IPPROTO_ESP, 0, esp->seq,
+                               mpls_count, mpls);
     }
 }
 

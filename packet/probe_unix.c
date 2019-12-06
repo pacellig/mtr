@@ -77,10 +77,8 @@ int send_packet(
             }
         }
     } else if (sockaddr->ss_family == AF_INET) {
-        // fprintf(stderr, "sendpacket ipv4\n");
         sockaddr_length = sizeof(struct sockaddr_in);
         if (net_state->platform.ip4_socket_raw) {
-            // fprintf(stderr, "sendpacket ipv4 raw\n");
             send_socket = net_state->platform.ip4_send_socket;
         } else {
             if (param->protocol == IPPROTO_ICMP) {
@@ -705,9 +703,7 @@ void receive_replies_from_recv_socket(
         msg.msg_namelen = sizeof(remote_addr);
         msg.msg_control = control;
         msg.msg_controllen = sizeof(control);
-        fprintf(stderr, "Before rcvmsg: %d", socket);
         packet_length = recvmsg(socket, &msg, flag);
-        fprintf(stderr, "Packet length: %d", packet_length);
         /*
            Get the time immediately after reading the packet to
            keep the timing as precise as we can.

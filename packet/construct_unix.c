@@ -285,6 +285,27 @@ void construct_udp4_header(
                                         udp_size, udp->checksum != 0));
 }
 
+void construct_esp_header(
+    const struct net_state_t *net_state,
+    struct probe_t *probe,
+    char *packet_buffer,
+    int packet_size,
+    const struct probe_param_t *param)
+{
+    struct ESPHeader *esp;
+
+    if (net_state->platform.ip4_socket_raw) {
+        esp = (struct ESPHeader *) &packet_buffer[sizeof(struct IPHeader)];
+    } else {
+        esp = (struct ESPHeader *) &packet_buffer[0];
+    }
+
+    memset(esp, 0, sizeof(struct ESPHeader));
+
+    esp->seq = probe->sequence;
+    fprintf(stderr,"send ESP seq: %d\n", esp->seq);
+}
+
 /*  Construct a header for UDPv6 probes  */
 static
 int construct_udp6_packet(
@@ -572,10 +593,12 @@ int construct_ip4_packet(
         } else if (param->protocol == IPPROTO_UDP) {
             construct_udp4_header(net_state, probe, packet_buffer,
                                   packet_size, param);
+        } else if (param->protocol == IPPROTO_ESP) {
+            construct_esp_header(net_state, probe, packet_buffer,
+                                  packet_size, param);
         } else {
-            // ¯\_(ツ)_/¯
-            // errno = EINVAL;
-            // return -1;
+            errno = EINVAL;
+            return -1;
         }
     }
 
