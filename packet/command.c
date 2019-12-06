@@ -427,7 +427,6 @@ void dispatch_buffer_commands(
         /*  Copy the completed command  */
         memmove(full_command, buffer->incoming_buffer, command_length);
         full_command[command_length] = 0;
-        fprintf(stderr, "cmd: %s\n", full_command);
         /*
            Free the space used by the completed command by advancing the
            remaining requests within the buffer.

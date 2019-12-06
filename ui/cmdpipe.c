@@ -80,8 +80,6 @@ int send_synchronous_command(
     int write_length;
     int read_length;
 
-
-    fprintf(stderr, "ssc: %s\n", cmd);
     /*  Query send-probe support  */
     command_length = strlen(cmd);
     write_length = write(cmdpipe->write_fd, cmd, command_length);
@@ -141,7 +139,6 @@ int check_feature(
         /*  Looks good  */
         return 0;
     }
-    fprintf(stderr, "check feature failed\n");
     errno = ENOTSUP;
     return -1;
 }
@@ -197,8 +194,6 @@ int check_packet_features(
             return -1;
         }
     } else {
-    fprintf(stderr, "check packet features failed\n");
-
         errno = EINVAL;
         return -1;
     }
@@ -399,21 +394,23 @@ void construct_base_command(
     } else if (ctl->mtrtype == IPPROTO_SCTP) {
         protocol = "sctp";
 #endif
-    } else if (ctl->mtrtype < 0 || ctl->mtrtype > IPPROTO_MAX) {
+    } else if (ctl->mtrtype < 0 || ctl->mtrtype >= IPPROTO_MAX) {
         display_close(ctl);
         error(EXIT_FAILURE, 0,
               "protocol unsupported by mtr-packet interface (out of range 0-%d)", IPPROTO_MAX);
-    } else {
-        /* Use the protocol number */
-        char buf[4];
-        sprintf(buf,"%d",ctl->mtrtype);
-        protocol = buf;
-    }
+    } 
 
-    snprintf(command, buffer_size,
-             "%d send-probe %s %s %s %s protocol %s",
-             command_token,
-             ip_type, ip_string, local_ip_type, local_ip_string, protocol);
+    if (protocol != NULL) {
+        snprintf(command, buffer_size,
+                "%d send-probe %s %s %s %s protocol %s",
+                command_token,
+                ip_type, ip_string, local_ip_type, local_ip_string, protocol);
+    } else {
+        snprintf(command, buffer_size,
+                "%d send-probe %s %s %s %s protocol %d",
+                command_token,
+                ip_type, ip_string, local_ip_type, local_ip_string, ctl->mtrtype);
+    }
 }
 
 
@@ -690,7 +687,6 @@ void handle_command_reply(
     char *reply_name;
     struct mplslen mpls;
 
-    fprintf(stderr, "%s\n", reply_str);
     /*  Parse the reply string  */
     if (parse_command(&reply, reply_str)) {
         /*
