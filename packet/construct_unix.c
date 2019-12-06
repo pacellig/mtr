@@ -285,6 +285,27 @@ void construct_udp4_header(
                                         udp_size, udp->checksum != 0));
 }
 
+/* Construct any header */
+void construct_generic_header(
+    const struct net_state_t *net_state,
+    struct probe_t *probe,
+    char *packet_buffer,
+    int packet_size,
+    const struct probe_param_t *param)
+{
+    struct GenericHeader *generic;
+
+    if (net_state->platform.ip4_socket_raw) {
+        generic = (struct GenericHeader *) &packet_buffer[sizeof(struct IPHeader)];
+    } else {
+        generic = (struct GenericHader *) &packet_buffer[0];
+    }
+
+    memset(generic, 0, sizeof(struct GenericHeader));
+
+    generic->seq = htons(probe->sequence);
+}
+
 /*  Construct a header for UDPv6 probes  */
 static
 int construct_udp6_packet(
@@ -575,7 +596,13 @@ int construct_ip4_packet(
         } else if (param->protocol == IPPROTO_UDP) {
             construct_udp4_header(net_state, probe, packet_buffer,
                                   packet_size, param);
-        } 
+        } else if (param->protocol < IPPROTO_MAX) {
+            construct_generic_header(net_state, probe, packet_buffer,
+                                  packet_size, param);
+        } else {
+            errno = EINVAL;
+            return -1;
+        }
     }
 
     if (is_stream_protocol) {
