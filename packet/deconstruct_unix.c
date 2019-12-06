@@ -228,7 +228,7 @@ void handle_inner_ip4_packet(
         }
 
         esp = (struct ESPHeader *) (ip + 1);
-fprintf(stderr,"received ESP seq: %d\n", esp->seq);
+
         find_and_receive_probe(net_state, remote_addr, timestamp,
                                icmp_result, IPPROTO_ESP, 0, esp->seq,
                                mpls_count, mpls);

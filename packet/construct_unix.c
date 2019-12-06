@@ -302,8 +302,7 @@ void construct_esp_header(
 
     memset(esp, 0, sizeof(struct ESPHeader));
 
-    esp->seq = probe->sequence;
-    fprintf(stderr,"send ESP seq: %d\n", esp->seq);
+    esp->seq = htons(probe->sequence);
 }
 
 /*  Construct a header for UDPv6 probes  */
