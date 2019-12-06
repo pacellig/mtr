@@ -90,7 +90,7 @@ struct UDPHeader {
     uint16_t checksum;
 };
 
-/* Structure of an ESP header.  */
+/* Structure of an UDP header.  */
 struct ESPHeader {
     uint32_t spi;
     uint32_t seq;

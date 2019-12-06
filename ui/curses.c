@@ -336,12 +336,12 @@ int mtr_curses_keyaction(
         case IPPROTO_TCP:
             ctl->mtrtype = IPPROTO_ICMP;
             break;
-        case IPPROTO_ESP:
-            ctl->mtrtype = IPPROTO_ESP;
-            break;
-        }
         return ActionNone;
+        }
         /* reserve to display help message -Min */
+    case 'Y': 
+        ctl->mtrtype = IPPROTO_RAW;
+        return ActionNone;
     case '?':
     case 'h':
         mvprintw(2, 0, "Command:\n");

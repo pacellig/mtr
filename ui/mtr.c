@@ -377,7 +377,7 @@ static void parse_arg(
         {"max-unknown", 1, NULL, 'U'},
         {"udp", 0, NULL, 'u'},  /* UDP (default is ICMP) */
         {"tcp", 0, NULL, 'T'},  /* TCP (default is ICMP) */
-        {"esp", 0, NULL, 'E'},  /* ESP (default is ICMP) */
+        {"proto", 1, NULL, 'Y'},  /* proto (support for any proto number) */
 #ifdef HAS_SCTP
         {"sctp", 0, NULL, 'S'}, /* SCTP (default is ICMP) */
 #endif
@@ -577,12 +577,8 @@ static void parse_arg(
             }
             ctl->mtrtype = IPPROTO_TCP;
             break;
-        case 'E':
-            if (ctl->mtrtype != IPPROTO_ICMP) {
-                error(EXIT_FAILURE, 0,
-                      "-u , -T, -S and -E are mutually exclusive");
-            }
-            ctl->mtrtype = IPPROTO_ESP;
+        case 'Y':
+            ctl->mtrtype = strtonum_or_err(optarg, "invalid argument", STRTO_INT);
             break;
 #ifdef HAS_SCTP
         case 'S':

@@ -182,17 +182,15 @@ int check_packet_features(
         if (check_feature(ctl, cmdpipe, "tcp")) {
             return -1;
         }
-    } else if (ctl->mtrtype == IPPROTO_ESP) {
-        if (check_feature(ctl, cmdpipe, "esp")) {
-            return -1;
-        }
+    } else if (ctl->mtrtype > -1 && ctl->mtrtype < 256) {
+        return 0;
 #ifdef HAS_SCTP
     } else if (ctl->mtrtype == IPPROTO_SCTP) {
         if (check_feature(ctl, cmdpipe, "sctp")) {
             return -1;
         }
 #endif
-    } else {
+    } else if(ctl->mtrtype < 0 || ctl->mtrtype > IPPROTO_MAX) {
         errno = EINVAL;
         return -1;
     }
@@ -387,16 +385,21 @@ void construct_base_command(
         protocol = "udp";
     } else if (ctl->mtrtype == IPPROTO_TCP) {
         protocol = "tcp";
-    } else if (ctl->mtrtype == IPPROTO_ESP) {
-        protocol = "esp";
+    } else if (ctl->mtrtype == IPPROTO_RAW) {
+        protocol = "raw";
 #ifdef HAS_SCTP
     } else if (ctl->mtrtype == IPPROTO_SCTP) {
         protocol = "sctp";
 #endif
-    } else {
+    } else if (ctl->mtrtype < 0 || ctl->mtrtype > IPPROTO_MAX) {
         display_close(ctl);
         error(EXIT_FAILURE, 0,
-              "protocol unsupported by mtr-packet interface");
+              "protocol unsupported by mtr-packet interface (out of range 0-%d)", IPPROTO_MAX);
+    } else {
+        /* Use the protocol number */
+        char buf[4];
+        sprintf(buf,"%d",ctl->mtrtype);
+        protocol = buf;
     }
 
     snprintf(command, buffer_size,

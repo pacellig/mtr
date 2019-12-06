@@ -94,6 +94,8 @@ const char *check_support(
     const char *feature,
     struct net_state_t *net_state)
 {
+    int proto_num; 
+
     if (!strcmp(feature, "version")) {
         return PACKAGE_VERSION;
     }
@@ -136,6 +138,11 @@ const char *check_support(
         return "ok";
     }
 #endif
+
+    // any protocol support - feature is a protocol number
+    if (sscanf(feature, "%d", &proto_num) == 1) {
+        return check_protocol_support(net_state, proto_num);
+    }
 
     return "no";
 }
@@ -201,13 +208,24 @@ bool decode_probe_argument(
             param->protocol = IPPROTO_UDP;
         } else if (!strcmp(value, "tcp")) {
             param->protocol = IPPROTO_TCP;
-        } else if (!strcmp(value, "esp")) {
-            param->protocol = IPPROTO_ESP;
 #ifdef IPPROTO_SCTP
         } else if (!strcmp(value, "sctp")) {
             param->protocol = IPPROTO_SCTP;
 #endif
         } else {
+            // support any protocol number
+            int proto_num = atoi(value);
+            if(proto_num < 0 || proto_num > IPPROTO_MAX) {
+                return false;
+            }
+            param->protocol = proto_num;
+        }
+    }
+
+    /*  Destination port for the probe  */
+    if (!strcmp(name, "proto")) {
+        param->protocol = strtol(value, &endstr, 10);
+        if (*endstr != 0) {
             return false;
         }
     }

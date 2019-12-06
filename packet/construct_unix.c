@@ -511,12 +511,15 @@ int compute_packet_size(
 
         /*  We may need to put the sequence number in the payload  */
         packet_size += sizeof(int);
-    } else if (param->protocol == IPPROTO_ESP) {
+    } else if (param->protocol > -1 && param->protocol < 256 ) {
+        /* just use a random size (ESPHeader) */
         packet_size += sizeof(struct ESPHeader);
-
     } else {
-        errno = EINVAL;
-        return -1;
+        /* 
+           Support all protocols, without building the actual underlying
+           packet
+        */
+        packet_size = 0;
     }
 
     /*
@@ -572,11 +575,7 @@ int construct_ip4_packet(
         } else if (param->protocol == IPPROTO_UDP) {
             construct_udp4_header(net_state, probe, packet_buffer,
                                   packet_size, param);
-        } else {
-            // ¯\_(ツ)_/¯
-            // errno = EINVAL;
-            // return -1;
-        }
+        } 
     }
 
     if (is_stream_protocol) {
