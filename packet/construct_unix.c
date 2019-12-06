@@ -285,6 +285,28 @@ void construct_udp4_header(
                                         udp_size, udp->checksum != 0));
 }
 
+/*
+    Construct a header for generic-protocol probes.
+*/
+void construct_generic_header(
+    const struct net_state_t *net_state,
+    struct probe_t *probe,
+    char *packet_buffer,
+    int packet_size,
+    const struct probe_param_t *param)
+{
+    struct GenericHeader *header;
+
+    if (net_state->platform.ip4_socket_raw) {
+        header = (struct GenericHeader *) &packet_buffer[sizeof(struct IPHeader)];
+    } else {
+        header = (struct GenericHeader *) &packet_buffer[0];
+    }
+
+    memset(header, 0, sizeof(struct GenericHeader));
+    header->seq = probe->sequence;
+}
+
 void construct_esp_header(
     const struct net_state_t *net_state,
     struct probe_t *probe,
@@ -597,8 +619,8 @@ int construct_ip4_packet(
             construct_esp_header(net_state, probe, packet_buffer,
                                   packet_size, param);
         } else {
-            errno = EINVAL;
-            return -1;
+            construct_generic_header(net_state, probe, packet_buffer,
+                                     packet_size, param);
         }
     }
 

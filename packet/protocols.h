@@ -96,6 +96,11 @@ struct ESPHeader {
     uint32_t seq;
 };
 
+/* Structure for generic header.  */
+struct GenericHeader {
+    uint32_t seq;
+};
+
 /* Structure of an TCP header, as far as we need it.  */
 struct TCPHeader {
     uint16_t srcport;
