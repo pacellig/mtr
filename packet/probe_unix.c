@@ -497,28 +497,7 @@ bool is_protocol_supported(
     struct net_state_t * net_state,
     int protocol)
 {
-    if (protocol == IPPROTO_ICMP) {
-        return true;
-    }
-
-    if (protocol == IPPROTO_UDP) {
-        return true;
-    }
-
-    if (protocol == IPPROTO_TCP) {
-        return true;
-    }
-
-    if (protocol == IPPROTO_ESP) {
-        return true;
-    }
-#ifdef IPPROTO_SCTP
-    if (protocol == IPPROTO_SCTP) {
-        return net_state->platform.sctp_support;
-    }
-#endif
-
-    return false;
+    return true
 }
 
 /*  Report an error during send_probe based on the errno value  */
@@ -726,8 +705,9 @@ void receive_replies_from_recv_socket(
         msg.msg_namelen = sizeof(remote_addr);
         msg.msg_control = control;
         msg.msg_controllen = sizeof(control);
+        fprintf(stderr, "Before rcvmsg: %d", socket);
         packet_length = recvmsg(socket, &msg, flag);
-
+        fprintf(stderr, "Packet length: %d", packet_length);
         /*
            Get the time immediately after reading the packet to
            keep the timing as precise as we can.
