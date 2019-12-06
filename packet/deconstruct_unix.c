@@ -178,7 +178,7 @@ void handle_inner_ip4_packet(
 #endif
     const int ip_generic_size =
         sizeof(struct IPHeader) + sizeof(struct GenericHeader);
-    const struct GenericHeader *esp;
+    const struct GenericHeader *generic;
 
     if (ip->protocol == IPPROTO_ICMP) {
         if (packet_length < ip_icmp_size) {

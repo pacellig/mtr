@@ -298,7 +298,7 @@ void construct_generic_header(
     if (net_state->platform.ip4_socket_raw) {
         generic = (struct GenericHeader *) &packet_buffer[sizeof(struct IPHeader)];
     } else {
-        generic = (struct GenericHader *) &packet_buffer[0];
+        generic = (struct GenericHeader *) &packet_buffer[0];
     }
 
     memset(generic, 0, sizeof(struct GenericHeader));
