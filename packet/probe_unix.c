@@ -78,6 +78,7 @@ int send_packet(
         }
     } else if (sockaddr->ss_family == AF_INET) {
         sockaddr_length = sizeof(struct sockaddr_in);
+
         if (net_state->platform.ip4_socket_raw) {
             send_socket = net_state->platform.ip4_send_socket;
         } else {
@@ -144,7 +145,7 @@ void check_length_order(
 
     if (resolve_probe_addresses(net_state, &param, &p0.remote_addr,
                 &p0.local_addr)) {
-        fprintf(stderr, "Error decoding localhost address (%s/%s)\n",
+        fprintf(stderr, "Error decoding localhost address (%s/%s)\n", 
                 probe_err, strerror (errno));
         exit(EXIT_FAILURE);
     }
@@ -540,7 +541,6 @@ void send_probe(
 
     if (resolve_probe_addresses(net_state, param, &probe->remote_addr,
                 &probe->local_addr)) {
-
         printf("%d invalid-argument\n", param->command_token);
         free_probe(net_state, probe);
         return;
@@ -550,9 +550,9 @@ void send_probe(
         error(EXIT_FAILURE, errno, "gettimeofday failure");
     }
 
-    // there might be an off-by-one in the number of tries here.
+    // there might be an off-by-one in the number of tries here. 
     // this is intentional.  It is no use exhausting the very last
-    // open port. Max 10 retries would've been acceptable too I think.
+    // open port. Max 10 retries would've been acceptable too I think. 
     for (trytimes=MIN_PORT; trytimes < MAX_PORT; trytimes++) {
 
         packet_size = construct_packet(net_state, &probe->platform.socket,
@@ -561,7 +561,7 @@ void send_probe(
 
         if (packet_size > 0) break; // no retry if we succeed.
 
-        if ((param->protocol != IPPROTO_TCP) &&
+        if ((param->protocol != IPPROTO_TCP) && 
             (param->protocol != IPPROTO_SCTP)) break; // no retry if not TCP/SCTP
 
         if ((errno != EADDRINUSE) && (errno != EADDRNOTAVAIL)) {
@@ -704,6 +704,7 @@ void receive_replies_from_recv_socket(
         msg.msg_control = control;
         msg.msg_controllen = sizeof(control);
         packet_length = recvmsg(socket, &msg, flag);
+
         /*
            Get the time immediately after reading the packet to
            keep the timing as precise as we can.

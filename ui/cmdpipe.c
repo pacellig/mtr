@@ -139,6 +139,7 @@ int check_feature(
         /*  Looks good  */
         return 0;
     }
+
     errno = ENOTSUP;
     return -1;
 }
@@ -155,6 +156,7 @@ int check_packet_features(
     struct packet_command_pipe_t *cmdpipe)
 {
     char proto_num[4];
+
     /*  Check the IP protocol version  */
     if (ctl->af == AF_INET6) {
         if (check_feature(ctl, cmdpipe, "ip-6")) {
@@ -189,7 +191,7 @@ int check_packet_features(
         }
 #endif
     } else if(ctl->mtrtype >0 && ctl->mtrtype <= IPPROTO_MAX) {
-        sprintf(proto_num, "%d", ctl->mtrtype);
+        snprintf(proto_num, 4, "%d", ctl->mtrtype);
         if (check_feature(ctl, cmdpipe, proto_num)) {
             return -1;
         }
@@ -236,8 +238,8 @@ void execute_packet_child(
      */
     execlp(mtr_packet_path, "mtr-packet", (char *) NULL);
 
-    /*
-       Then try to find it where WE were executed from.
+    /* 
+       Then try to find it where WE were executed from.  
      */
     strncpy (buf, myname, 240);
     strcat (buf, "-packet");
@@ -394,7 +396,7 @@ void construct_base_command(
     } else if (ctl->mtrtype == IPPROTO_SCTP) {
         protocol = "sctp";
 #endif
-    } else if (ctl->mtrtype < 0 || ctl->mtrtype >= IPPROTO_MAX) {
+    } else if (ctl->mtrtype < 0 || ctl->mtrtype > IPPROTO_MAX) {
         display_close(ctl);
         error(EXIT_FAILURE, 0,
               "protocol unsupported by mtr-packet interface (out of range 0-%d)", IPPROTO_MAX);

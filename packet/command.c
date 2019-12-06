@@ -124,9 +124,6 @@ const char *check_support(
         return check_protocol_support(net_state, IPPROTO_TCP);
     }
 
-    if (!strcmp(feature, "esp")) {
-        return check_protocol_support(net_state, IPPROTO_ESP);
-    }
 #ifdef IPPROTO_SCTP
     if (!strcmp(feature, "sctp")) {
         return check_protocol_support(net_state, IPPROTO_SCTP);
@@ -219,14 +216,6 @@ bool decode_probe_argument(
                 return false;
             }
             param->protocol = proto_num;
-        }
-    }
-
-    /*  Destination port for the probe  */
-    if (!strcmp(name, "proto")) {
-        param->protocol = strtol(value, &endstr, 10);
-        if (*endstr != 0) {
-            return false;
         }
     }
 
@@ -367,6 +356,7 @@ void send_probe_command(
     if (!validate_probe_parameters(net_state, &param)) {
         return;
     }
+
     /*  Send the probe using a platform specific mechanism  */
     send_probe(net_state, &param);
 }
@@ -427,6 +417,7 @@ void dispatch_buffer_commands(
         /*  Copy the completed command  */
         memmove(full_command, buffer->incoming_buffer, command_length);
         full_command[command_length] = 0;
+
         /*
            Free the space used by the completed command by advancing the
            remaining requests within the buffer.
@@ -446,7 +437,7 @@ void dispatch_buffer_commands(
     if (buffer->incoming_read_position >= COMMAND_BUFFER_SIZE - 1) {
         /*
            If we've filled the buffer without a complete command, the
-           only thing we can do is discard what we've read and hope that
+           only thing we can do is discard what we've read and hope that 
            new data is better formatted.
          */
         printf("0 command-buffer-overflow\n");
@@ -491,6 +482,7 @@ int read_commands(
     int command_stream = buffer->command_stream;
 
     read_count = read(command_stream, read_position, space_remaining);
+
     /*  If the command stream has been closed, read will return zero.  */
     if (read_count == 0) {
         errno = EPIPE;

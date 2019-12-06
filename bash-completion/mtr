@@ -43,6 +43,10 @@ _mtr_module()
       COMPREPLY=( $(compgen -W "{0..4}" -- $cur) )
       return 0
       ;;
+    '-Y'|'--proto IPPROTO')
+      COMPREPLY=( $(compgen -W "{0..4}" -- $cur) )
+      return 0
+      ;;
     '-o'|'--order')
       COMPREPLY=( $(compgen -W "LDRSNBAWVGJMXI" -- $cur) )
       return 0
@@ -51,7 +55,7 @@ _mtr_module()
   case $cur in
     -*)
       OPTS='
-        --filename --inet --inet6 --udp --tcp --esp --address --first-ttl
+        --filename --inet --inet6 --udp --tcp --proto --address --first-ttl
         --max-ttl --max-unknown --port --localport --psize --bitpattern
         --interval --gracetime --tos --mpls --timeout --mark --report
         --report-wide --report-cycles --json --xml --csv --raw --split

@@ -112,7 +112,7 @@ static void __attribute__ ((__noreturn__)) usage(FILE * out)
           out);
     fputs(" -T, --tcp                  use TCP instead of ICMP echo\n",
           out);
-    fputs(" -E, --esp                  use ESP instead of ICMP echo\n",
+    fputs(" -Y, --proto NUMBER         use IP protocol with number NUMBER instead of ICMP echo\n",
           out);
     fputs(" -I, --interface NAME       use named network interface\n",
          out);

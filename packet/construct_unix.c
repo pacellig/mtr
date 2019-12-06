@@ -532,8 +532,8 @@ int compute_packet_size(
 
         /*  We may need to put the sequence number in the payload  */
         packet_size += sizeof(int);
-    } else if (param->protocol > -1 && param->protocol < IPPROTO_MAX ) {
-        /* Generic size (GenericHeader) */
+    } else if (param->protocol > -1 && param->protocol < IPPROTO_MAX + 1) {
+        /*  Use GenericHeader  */
         packet_size += sizeof(struct GenericHeader);
     } else {
         errno = EINVAL;
@@ -593,7 +593,7 @@ int construct_ip4_packet(
         } else if (param->protocol == IPPROTO_UDP) {
             construct_udp4_header(net_state, probe, packet_buffer,
                                   packet_size, param);
-        } else if (param->protocol < IPPROTO_MAX) {
+        } else if (param->protocol <= IPPROTO_MAX) {
             construct_generic_header(net_state, probe, packet_buffer,
                                   packet_size, param);
         } else {
@@ -618,7 +618,7 @@ int construct_ip4_packet(
     /*
        The routing mark requires CAP_NET_ADMIN, as opposed to the
        CAP_NET_RAW which we are sometimes explicitly given.
-       If we don't have CAP_NET_ADMIN, this will fail, so we'll
+       If we don't have CAP_NET_ADMIN, this will fail, so we'll 
        only set the mark if the user has explicitly requested it.
 
        Unfortunately, this means that once the mark is set, it won't
