@@ -176,6 +176,9 @@ void handle_inner_ip4_packet(
         sizeof(struct IPHeader) + sizeof(struct SCTPHeader);
     const struct SCTPHeader *sctp;
 #endif
+    const int ip_generic_size =
+        sizeof(struct IPHeader) + sizeof(struct GenericHeader);
+    const struct GenericHeader *generic;
 
     if (ip->protocol == IPPROTO_ICMP) {
         if (packet_length < ip_icmp_size) {
@@ -219,6 +222,16 @@ void handle_inner_ip4_packet(
                                icmp_result, IPPROTO_SCTP, 0, sctp->srcport,
                                mpls_count, mpls);
 #endif
+    } else {
+        if (packet_length < ip_generic_size) {
+            return;
+        }
+
+        generic = (struct GenericHeader *) (ip + 1);
+
+        find_and_receive_probe(net_state, remote_addr, timestamp,
+                               icmp_result, ip->protocol, 0, generic->seq,
+                               mpls_count, mpls);
     }
 }
 

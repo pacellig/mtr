@@ -155,6 +155,8 @@ int check_packet_features(
     struct mtr_ctl *ctl,
     struct packet_command_pipe_t *cmdpipe)
 {
+    char proto_num[4];
+
     /*  Check the IP protocol version  */
     if (ctl->af == AF_INET6) {
         if (check_feature(ctl, cmdpipe, "ip-6")) {
@@ -188,6 +190,11 @@ int check_packet_features(
             return -1;
         }
 #endif
+    } else if(ctl->mtrtype >0 && ctl->mtrtype <= IPPROTO_MAX) {
+        snprintf(proto_num, 4, "%d", ctl->mtrtype);
+        if (check_feature(ctl, cmdpipe, proto_num)) {
+            return -1;
+        }
     } else {
         errno = EINVAL;
         return -1;
@@ -383,20 +390,29 @@ void construct_base_command(
         protocol = "udp";
     } else if (ctl->mtrtype == IPPROTO_TCP) {
         protocol = "tcp";
+    } else if (ctl->mtrtype == IPPROTO_RAW) {
+        protocol = "raw";
 #ifdef HAS_SCTP
     } else if (ctl->mtrtype == IPPROTO_SCTP) {
         protocol = "sctp";
 #endif
-    } else {
+    } else if (ctl->mtrtype < 0 || ctl->mtrtype > IPPROTO_MAX) {
         display_close(ctl);
         error(EXIT_FAILURE, 0,
-              "protocol unsupported by mtr-packet interface");
-    }
+              "protocol unsupported by mtr-packet interface (out of range 0-%d)", IPPROTO_MAX);
+    } 
 
-    snprintf(command, buffer_size,
-             "%d send-probe %s %s %s %s protocol %s",
-             command_token,
-             ip_type, ip_string, local_ip_type, local_ip_string, protocol);
+    if (protocol != NULL) {
+        snprintf(command, buffer_size,
+                "%d send-probe %s %s %s %s protocol %s",
+                command_token,
+                ip_type, ip_string, local_ip_type, local_ip_string, protocol);
+    } else {
+        snprintf(command, buffer_size,
+                "%d send-probe %s %s %s %s protocol %d",
+                command_token,
+                ip_type, ip_string, local_ip_type, local_ip_string, ctl->mtrtype);
+    }
 }
 
 
@@ -755,7 +771,7 @@ void consume_reply_buffer(
         /*
            Terminate the reply string at the newline, which
            is necessary in the case where we are able to read
-           mulitple replies arriving simultaneously.
+           multiple replies arriving simultaneously.
          */
         *end_of_reply = 0;
 

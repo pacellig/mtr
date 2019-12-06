@@ -491,29 +491,12 @@ bool is_ip_version_supported(
     }
 }
 
-/*  Returns true if we can transmit probes using the specified protocol  */
+/*  Support any protocol numbers (unix only) */
 bool is_protocol_supported(
     struct net_state_t * net_state,
     int protocol)
 {
-    if (protocol == IPPROTO_ICMP) {
-        return true;
-    }
-
-    if (protocol == IPPROTO_UDP) {
-        return true;
-    }
-
-    if (protocol == IPPROTO_TCP) {
-        return true;
-    }
-#ifdef IPPROTO_SCTP
-    if (protocol == IPPROTO_SCTP) {
-        return net_state->platform.sctp_support;
-    }
-#endif
-
-    return false;
+    return true;
 }
 
 /*  Report an error during send_probe based on the errno value  */
@@ -571,7 +554,7 @@ void send_probe(
     // this is intentional.  It is no use exhausting the very last
     // open port. Max 10 retries would've been acceptable too I think. 
     for (trytimes=MIN_PORT; trytimes < MAX_PORT; trytimes++) {
-			
+
         packet_size = construct_packet(net_state, &probe->platform.socket,
                          probe, packet, PACKET_BUFFER_SIZE,
                          param);
@@ -586,7 +569,7 @@ void send_probe(
         }
 
      	probe->sequence = net_state->platform.next_sequence++;
-        	
+
        	if (net_state->platform.next_sequence > MAX_PORT) {
             net_state->platform.next_sequence = MIN_PORT;
         }

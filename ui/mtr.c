@@ -112,6 +112,8 @@ static void __attribute__ ((__noreturn__)) usage(FILE * out)
           out);
     fputs(" -T, --tcp                  use TCP instead of ICMP echo\n",
           out);
+    fputs(" -Y, --proto NUMBER         use IP protocol with number NUMBER instead of ICMP echo\n",
+          out);
     fputs(" -I, --interface NAME       use named network interface\n",
          out);
     fputs
@@ -375,6 +377,7 @@ static void parse_arg(
         {"max-unknown", 1, NULL, 'U'},
         {"udp", 0, NULL, 'u'},  /* UDP (default is ICMP) */
         {"tcp", 0, NULL, 'T'},  /* TCP (default is ICMP) */
+        {"proto", 1, NULL, 'Y'},  /* proto (support for any proto number) */
 #ifdef HAS_SCTP
         {"sctp", 0, NULL, 'S'}, /* SCTP (default is ICMP) */
 #endif
@@ -573,6 +576,9 @@ static void parse_arg(
                 ctl->remoteport = 80;
             }
             ctl->mtrtype = IPPROTO_TCP;
+            break;
+        case 'Y':
+            ctl->mtrtype = strtonum_or_err(optarg, "invalid argument", STRTO_INT);
             break;
 #ifdef HAS_SCTP
         case 'S':

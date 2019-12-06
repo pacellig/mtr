@@ -285,6 +285,27 @@ void construct_udp4_header(
                                         udp_size, udp->checksum != 0));
 }
 
+/* Construct any header */
+void construct_generic_header(
+    const struct net_state_t *net_state,
+    struct probe_t *probe,
+    char *packet_buffer,
+    int packet_size,
+    const struct probe_param_t *param)
+{
+    struct GenericHeader *generic;
+
+    if (net_state->platform.ip4_socket_raw) {
+        generic = (struct GenericHeader *) &packet_buffer[sizeof(struct IPHeader)];
+    } else {
+        generic = (struct GenericHeader *) &packet_buffer[0];
+    }
+
+    memset(generic, 0, sizeof(struct GenericHeader));
+
+    generic->seq = htons(probe->sequence);
+}
+
 /*  Construct a header for UDPv6 probes  */
 static
 int construct_udp6_packet(
@@ -511,6 +532,9 @@ int compute_packet_size(
 
         /*  We may need to put the sequence number in the payload  */
         packet_size += sizeof(int);
+    } else if (param->protocol > -1 && param->protocol < IPPROTO_MAX + 1) {
+        /*  Use GenericHeader  */
+        packet_size += sizeof(struct GenericHeader);
     } else {
         errno = EINVAL;
         return -1;
@@ -568,6 +592,9 @@ int construct_ip4_packet(
                                    packet_size, param);
         } else if (param->protocol == IPPROTO_UDP) {
             construct_udp4_header(net_state, probe, packet_buffer,
+                                  packet_size, param);
+        } else if (param->protocol <= IPPROTO_MAX) {
+            construct_generic_header(net_state, probe, packet_buffer,
                                   packet_size, param);
         } else {
             errno = EINVAL;
@@ -724,7 +751,7 @@ int construct_ip6_packet(
     /*
        Check the current socket address, and if it is the same
        as the source address we intend, we will skip the bind.
-       This is to accomodate Solaris, which, as of Solaris 11.3,
+       This is to accommodate Solaris, which, as of Solaris 11.3,
        will return an EINVAL error on bind if the socket is already
        bound, even if the same address is used.
      */

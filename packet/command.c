@@ -94,6 +94,8 @@ const char *check_support(
     const char *feature,
     struct net_state_t *net_state)
 {
+    int proto_num; 
+
     if (!strcmp(feature, "version")) {
         return PACKAGE_VERSION;
     }
@@ -121,6 +123,7 @@ const char *check_support(
     if (!strcmp(feature, "tcp")) {
         return check_protocol_support(net_state, IPPROTO_TCP);
     }
+
 #ifdef IPPROTO_SCTP
     if (!strcmp(feature, "sctp")) {
         return check_protocol_support(net_state, IPPROTO_SCTP);
@@ -132,6 +135,11 @@ const char *check_support(
         return "ok";
     }
 #endif
+
+    // any protocol support - feature is a protocol number
+    if (sscanf(feature, "%d", &proto_num) == 1) {
+        return check_protocol_support(net_state, proto_num);
+    }
 
     return "no";
 }
@@ -202,7 +210,12 @@ bool decode_probe_argument(
             param->protocol = IPPROTO_SCTP;
 #endif
         } else {
-            return false;
+            // support any protocol number
+            int proto_num = atoi(value);
+            if(proto_num < 0 || proto_num > IPPROTO_MAX) {
+                return false;
+            }
+            param->protocol = proto_num;
         }
     }
 
